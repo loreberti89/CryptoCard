@@ -9,11 +9,8 @@ import "../libraries/math/SafeMath.sol";
  * Generic implementation for the required functionality of the ERC721 standard
  */
 contract CryptoCardOwnership is ERC721, CryptoCardsFactory {
-  using SafeMath for uint256;
   
-  // Total amount of tokens
-  uint256 private totalTokens;
-
+  
   
   /**
   * @dev Guarantees msg.sender is owner of the given token
@@ -31,6 +28,7 @@ contract CryptoCardOwnership is ERC721, CryptoCardsFactory {
   function totalSupply() public view returns (uint256) {
     return totalTokens;
   }
+
 
   /**
   * @dev Gets the balance of the specified address
@@ -57,6 +55,7 @@ contract CryptoCardOwnership is ERC721, CryptoCardsFactory {
   */
   function ownerOf(uint256 _tokenId) public view returns (address) {
     address owner = cardOwner[_tokenId];
+    //address(0) check if the address is not set
     require(owner != address(0));
     return owner;
   }

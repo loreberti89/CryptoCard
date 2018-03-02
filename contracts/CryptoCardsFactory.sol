@@ -3,6 +3,7 @@ pragma solidity ^0.4.4;
 import "./Ownable.sol";
 contract CryptoCardsFactory is Ownable {
   
+  using SafeMath for uint256;
   event NewCard(uint id,string _name, uint _identity);
   struct Card{
   	uint256 identity;
@@ -22,14 +23,21 @@ contract CryptoCardsFactory is Ownable {
   // Mapping from token ID to index of the owner tokens list
   mapping(uint256 => uint256) internal ownedCardsIndex;
 
+  // Total amount of tokens
+  uint256 internal totalTokens;
+
   function createCard(string _name, uint256 _identity) external onlyOwner {
   	uint id = cards.push(Card(_identity, _name))- 1;
+
     cardOwner[id] = msg.sender;
     ownedCards[msg.sender].push(id); 
     ownedCardsIndex[id] = ownedCards[msg.sender].length;
-    
+    totalTokens = totalTokens.add(1);
+
     NewCard(id, _name, _identity);
   }
+
+
 
 
 }
