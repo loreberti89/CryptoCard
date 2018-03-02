@@ -1,30 +1,20 @@
 pragma solidity ^0.4.4;
 
 import "./ERC721.sol";
+import "./CryptoCardsFactory.sol";
 import "../libraries/math/SafeMath.sol";
 
 /**
- * @title ERC721Token
+ * @title ERC721CryptoCardOwnership
  * Generic implementation for the required functionality of the ERC721 standard
  */
-contract ERC721Card is ERC721 {
+contract CryptoCardOwnership is ERC721, CryptoCardsFactory {
   using SafeMath for uint256;
-
+  
   // Total amount of tokens
   uint256 private totalTokens;
 
-  // Mapping from token ID to owner
-  mapping (uint256 => address) private tokenOwner;
-
-  // Mapping from token ID to approved address
-  mapping (uint256 => address) private tokenApprovals;
-
-  // Mapping from owner to list of owned token IDs
-  mapping (address => uint256[]) private ownedTokens;
-
-  // Mapping from token ID to index of the owner tokens list
-  mapping(uint256 => uint256) private ownedTokensIndex;
-
+  
   /**
   * @dev Guarantees msg.sender is owner of the given token
   * @param _tokenId uint256 ID of the token to validate its ownership belongs to msg.sender
@@ -48,7 +38,7 @@ contract ERC721Card is ERC721 {
   * @return uint256 representing the amount owned by the passed address
   */
   function balanceOf(address _owner) public view returns (uint256) {
-    return ownedTokens[_owner].length;
+    return ownedCards[_owner].length;
   }
 
   /**
@@ -57,7 +47,7 @@ contract ERC721Card is ERC721 {
   * @return uint256[] representing the list of tokens owned by the passed address
   */
   function tokensOf(address _owner) public view returns (uint256[]) {
-    return ownedTokens[_owner];
+    return ownedCards[_owner];
   }
 
   /**
@@ -66,7 +56,7 @@ contract ERC721Card is ERC721 {
   * @return owner address currently marked as the owner of the given token ID
   */
   function ownerOf(uint256 _tokenId) public view returns (address) {
-    address owner = tokenOwner[_tokenId];
+    address owner = cardOwner[_tokenId];
     require(owner != address(0));
     return owner;
   }
@@ -77,7 +67,7 @@ contract ERC721Card is ERC721 {
    * @return address currently approved to take ownership of the given token ID
    */
   function approvedFor(uint256 _tokenId) public view returns (address) {
-    return tokenApprovals[_tokenId];
+    return cardApprovals[_tokenId];
   }
 
   /**
@@ -98,7 +88,7 @@ contract ERC721Card is ERC721 {
     address owner = ownerOf(_tokenId);
     require(_to != owner);
     if (approvedFor(_tokenId) != 0 || _to != 0) {
-      tokenApprovals[_tokenId] = _to;
+      cardApprovals[_tokenId] = _to;
       Approval(owner, _to, _tokenId);
     }
   }
@@ -169,7 +159,7 @@ contract ERC721Card is ERC721 {
   */
   function clearApproval(address _owner, uint256 _tokenId) private {
     require(ownerOf(_tokenId) == _owner);
-    tokenApprovals[_tokenId] = 0;
+    cardApprovals[_tokenId] = 0;
     Approval(_owner, 0, _tokenId);
   }
 
@@ -179,11 +169,11 @@ contract ERC721Card is ERC721 {
   * @param _tokenId uint256 ID of the token to be added to the tokens list of the given address
   */
   function addToken(address _to, uint256 _tokenId) private {
-    require(tokenOwner[_tokenId] == address(0));
-    tokenOwner[_tokenId] = _to;
+    require(cardOwner[_tokenId] == address(0));
+    cardOwner[_tokenId] = _to;
     uint256 length = balanceOf(_to);
-    ownedTokens[_to].push(_tokenId);
-    ownedTokensIndex[_tokenId] = length;
+    ownedCards[_to].push(_tokenId);
+    ownedCardsIndex[_tokenId] = length;
     totalTokens = totalTokens.add(1);
   }
 
@@ -195,20 +185,20 @@ contract ERC721Card is ERC721 {
   function removeToken(address _from, uint256 _tokenId) private {
     require(ownerOf(_tokenId) == _from);
 
-    uint256 tokenIndex = ownedTokensIndex[_tokenId];
+    uint256 tokenIndex = ownedCardsIndex[_tokenId];
     uint256 lastTokenIndex = balanceOf(_from).sub(1);
-    uint256 lastToken = ownedTokens[_from][lastTokenIndex];
+    uint256 lastToken = ownedCards[_from][lastTokenIndex];
 
-    tokenOwner[_tokenId] = 0;
-    ownedTokens[_from][tokenIndex] = lastToken;
-    ownedTokens[_from][lastTokenIndex] = 0;
+    cardOwner[_tokenId] = 0;
+    ownedCards[_from][tokenIndex] = lastToken;
+    ownedCards[_from][lastTokenIndex] = 0;
     // Note that this will handle single-element arrays. In that case, both tokenIndex and lastTokenIndex are going to
-    // be zero. Then we can make sure that we will remove _tokenId from the ownedTokens list since we are first swapping
+    // be zero. Then we can make sure that we will remove _tokenId from the ownedCards list since we are first swapping
     // the lastToken to the first position, and then dropping the element placed in the last position of the list
 
-    ownedTokens[_from].length--;
-    ownedTokensIndex[_tokenId] = 0;
-    ownedTokensIndex[lastToken] = tokenIndex;
+    ownedCards[_from].length--;
+    ownedCardsIndex[_tokenId] = 0;
+    ownedCardsIndex[lastToken] = tokenIndex;
     totalTokens = totalTokens.sub(1);
   }
 }
