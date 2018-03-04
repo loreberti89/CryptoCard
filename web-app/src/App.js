@@ -3,6 +3,17 @@ import logo from './logo.svg';
 import './App.css';
 import { DrizzleProvider } from 'drizzle-react';
 
+// Import contracts
+import CryptoCardsToken from "./contracts/CryptoCardsFactory.json";
+
+
+const options = {
+  contracts: [
+    CryptoCardsToken
+  ]
+}
+
+
 class App extends Component {
   render() {
     return (
