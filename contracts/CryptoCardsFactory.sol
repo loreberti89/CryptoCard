@@ -27,6 +27,8 @@ contract CryptoCardsFactory is Ownable {
   uint256 internal totalTokens;
 
   function createCard(string _name, uint256 _identity) external onlyOwner {
+
+
   	uint id = cards.push(Card(_identity, _name))- 1;
 
     cardOwner[id] = msg.sender;
@@ -36,8 +38,6 @@ contract CryptoCardsFactory is Ownable {
 
     NewCard(id, _name, _identity);
   }
-
-
 
 
 }
