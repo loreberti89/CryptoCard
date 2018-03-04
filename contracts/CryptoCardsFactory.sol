@@ -1,6 +1,7 @@
 pragma solidity ^0.4.4;
 
 import "./Ownable.sol";
+import "../libraries/math/SafeMath.sol";
 contract CryptoCardsFactory is Ownable {
   
   using SafeMath for uint256;
