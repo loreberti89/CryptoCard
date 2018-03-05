@@ -1,15 +1,13 @@
 <template>
   <div class="dashboard">
     <h1>{{ msg }}</h1>
-    <div v-if="userExists">
-      Welcome {{ pseudo }}. Destroy your account by clicking <a href="#" @click="destroyAccount">here</a>.
-    </div>
-    <div v-else>Sign up <router-link to="/signup">here</router-link>.</div>
+    
+  
   </div>
 </template>
 
 <script>
-import Users from '@/js/users'
+import CryptoCardsFactory from '@/js/cards'
 
 export default {
   name: 'dashboard',
@@ -20,15 +18,13 @@ export default {
     }
   },
   computed: {
-    userExists: function () {
-      return (typeof this.pseudo !== 'undefined')
-    }
+    
   },
   beforeCreate: function () {
-    Users.init().then(() => {
-      Users.exists(window.web3.eth.accounts[0]).then((exists) => {
+    CryptoCardsFactory.init().then(() => {
+      CryptoCardsFactory.exists(window.web3.eth.accounts[0]).then((exists) => {
         if (exists) {
-          Users.authenticate().then(pseudo => {
+          CryptoCardsFactory.authenticate().then(pseudo => {
             this.pseudo = pseudo
           })
         }
@@ -38,14 +34,7 @@ export default {
     })
   },
   methods: {
-    destroyAccount: function (e) {
-      e.preventDefault()
-      Users.destroy().then(() => {
-        this.pseudo = undefined
-      }).catch(err => {
-        console.log(err)
-      })
-    }
+    
   }
 }
 </script>
