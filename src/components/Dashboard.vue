@@ -22,13 +22,9 @@ export default {
   },
   beforeCreate: function () {
     CryptoCardsFactory.init().then(() => {
-      CryptoCardsFactory.exists(window.web3.eth.accounts[0]).then((exists) => {
-        if (exists) {
-          CryptoCardsFactory.authenticate().then(pseudo => {
-            this.pseudo = pseudo
-          })
-        }
-      })
+      
+
+      
     }).catch(err => {
       console.log(err)
     })
