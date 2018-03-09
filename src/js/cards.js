@@ -33,6 +33,27 @@ const CryptoCardFactory = {
       })
     })
   },
+  getAllCards: function(){
+
+    let self = this
+    return new Promise((resolve, reject) => {
+      self.instance.getAllCards().then(tx => {
+        resolve(tx)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  getCardById: function(id){
+    let self = this
+    return new Promise((resolve, reject) => {
+      self.instance.getCardById(id).then(tx => {
+        resolve(tx)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
   createCard: function(name, identity){
     let self = this
     console.log(window.web3.eth.accounts[0]);

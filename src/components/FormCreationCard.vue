@@ -11,7 +11,8 @@
 
 <script>
 import CryptoCardsFactory from '@/js/cards'
-import moment from 'moment'
+import moment from 'moment';
+import Card from '../classes/Card.js';
 export default {
   name: 'formcreationcard',
   data () {
@@ -31,6 +32,9 @@ export default {
       this.$set(this.card, 'identity', identity);
       CryptoCardsFactory.createCard(this.card.name, this.card.identity).then(tx => {
             this.$store.commit('incrementsNumberCards');
+            
+
+            this.$store.commit('pushCard', new Card(this.card.name, this.card.identity)); 
             
           }).catch(err => {
             console.log(err)

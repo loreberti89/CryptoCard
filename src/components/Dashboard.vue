@@ -4,6 +4,7 @@
     <h1>Numero totale di carte create: {{totalNumber}}</h1>
     <div>
       <formcreationcard></formcreationcard>
+      <listcards></listcards>
     </div>
   
   </div>
@@ -12,7 +13,9 @@
 <script>
 
 import formcreationcard from './FormCreationCard';
-import CryptoCardsFactory from '@/js/cards'
+import listcards from './ListCards';
+import CryptoCardsFactory from '@/js/cards';
+import Card from '../classes/Card.js';
 
 export default {
   name: 'dashboard',
@@ -24,7 +27,8 @@ export default {
     }
   },
   components: {
-        formcreationcard
+        formcreationcard,
+        listcards
   },
   computed: {
     totalNumber(){
@@ -32,17 +36,18 @@ export default {
     }
   },
   beforeCreate: function () {
+
     CryptoCardsFactory.init().then(() => {
       
       CryptoCardsFactory.getTotalCards().then(tx => {
             this.$store.commit('setNumberCards', tx.toNumber());
-            
+             
             
           }).catch(err => {
             console.log(err)
           })
-      
-    }).catch(err => {
+         
+      }).catch(err => {
       console.log(err)
     })
   },

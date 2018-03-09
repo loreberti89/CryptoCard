@@ -22,7 +22,8 @@ window.addEventListener('load', function () {
 
 const store = new Vuex.Store({
   state: {
-    numberCards: 0
+    numberCards: 0,
+    cards: []
   },
   mutations: {
     incrementsNumberCards (state) {
@@ -30,11 +31,18 @@ const store = new Vuex.Store({
     },
     setNumberCards (state, number){
       state.numberCards = number;
+    },
+    pushCard(state, card){
+      
+      state.cards.push(card);
     }
   },
   getters:{
     getTotalCards: state => {
       return state.numberCards;
+    },
+    getCards: state => {
+      return state.cards;
     }
   }
 })

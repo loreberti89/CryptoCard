@@ -27,7 +27,20 @@ contract CryptoCardsFactory is Ownable {
   // Total amount of tokens
   uint256 internal totalTokens;
 
-  function createCard(string _name, uint256 _identity) external {
+  function getAllCards() external view returns(uint[]) {
+    uint[] memory ids = new uint[](cards.length);
+    uint counter = 0;
+    for(uint i = 0; i < cards.length; i++){
+      ids[counter] = i;
+      counter++;
+    }
+    return ids;
+  }
+  function getCardById(uint id) external view returns(string, uint256){
+     return (cards[id].name, cards[id].identity);
+  }
+
+  function createCard(string _name, uint256 _identity) external onlyOwner {
 
 
   	uint id = cards.push(Card(_identity, _name))- 1;
