@@ -1,4 +1,4 @@
-var CryptoCards = artifacts.require("CryptoCardsFactory");
+var CryptoCards = artifacts.require("CryptoCardOwnership");
 
 module.exports = function(deployer) {
   deployer.deploy(CryptoCards);
