@@ -200,4 +200,22 @@ contract CryptoCardOwnership is ERC721, CryptoCardsFactory {
     ownedCardsIndex[lastToken] = tokenIndex;
     totalTokens = totalTokens.sub(1);
   }
+  /**
+  * @dev set price of token
+  * @param _onSale bool 
+  * @param _tokenId uint256
+  *
+  */
+  function setOnSaleAndPrice(bool _onSale, uint256 _tokenId) internal onlyOwnerOf(_tokenId) {
+    
+    cards[_tokenId].onSale = _onSale;
+    
+    if(_onSale){ 
+      require(msg.value > 0);
+      cards[_tokenId].price =  msg.value;
+    }else{ 
+      cards[_tokenId].price = 0;
+    }
+
+  }
 }

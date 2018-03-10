@@ -1,12 +1,27 @@
-function Card(_name, _identity) {
-	this.name = _name;
-	this.identity = _identity;
+class Card {
+	constructor(_identity, _price, _name, _onSale){
+		this.identity = _identity;
+		this.price = _price;
+		this.name = _name;
+		this.onSale = _onSale;	
+	}
+	 
 
-	function setName(_name){
+	setName(_name){
 		this.name = _name;
 	}
-	function setIdentity(_identity){
+	setIdentity(_identity){
 		this.identity = _identity;
+	}
+	setPrice(_price){
+		this.price = _price;
+	}
+	setOnSale(_onSale){
+		this.onSale = _onSale;
+	}
+
+	getPriceFromWei(){
+		return window.web3.fromWei(this.price, 'ether');
 	}
 }
 export default Card;

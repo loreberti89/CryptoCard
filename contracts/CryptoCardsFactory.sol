@@ -5,10 +5,14 @@ import "../libraries/math/SafeMath.sol";
 contract CryptoCardsFactory is Ownable {
   
   using SafeMath for uint256;
-  event NewCard(uint id,string _name, uint _identity);
+  //event NewCard(uint id,string _name, uint _identity);
   struct Card{
   	uint256 identity;
+    uint256 price;
   	string name;
+    bool onSale;
+    
+
   }	
   Card[] public cards;
 
@@ -36,21 +40,34 @@ contract CryptoCardsFactory is Ownable {
     }
     return ids;
   }
-  function getCardById(uint id) external view returns(string, uint256){
-     return (cards[id].name, cards[id].identity);
+
+  function getCardsOnSale() external view returns(uint[]) {
+    uint[] memory ids = new uint[](cards.length);
+    uint counter = 0;
+    for(uint i = 0; i < cards.length; i++){
+      if(cards[i].onSale){
+        ids[counter] = i;
+        counter++;
+      }
+    }
+    return ids;
   }
 
-  function createCard(string _name, uint256 _identity) external onlyOwner {
+  function getCardById(uint id) external view returns(uint256,uint256, string, bool){
+    return (cards[id].identity, cards[id].price, cards[id].name, cards[id].onSale);
+  }
+
+  function createCard(uint256 _identity, uint256 _price, string _name,  bool _onSale) external onlyOwner {
 
 
-  	uint id = cards.push(Card(_identity, _name))- 1;
+  	uint id = cards.push(Card(_identity, _price, _name, _onSale))- 1;
 
     cardOwner[id] = msg.sender;
     ownedCards[msg.sender].push(id); 
     ownedCardsIndex[id] = ownedCards[msg.sender].length;
     totalTokens = totalTokens.add(1);
 
-    NewCard(id, _name, _identity);
+    //NewCard(id, _name, _identity);
   }
 
 

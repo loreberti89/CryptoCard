@@ -44,6 +44,16 @@ const CryptoCardFactory = {
       })
     })
   },
+  getCardsOnSale:function(){
+    let self = this
+    return new Promise((resolve, reject) => {
+      self.instance.getCardsOnSale().then(tx => {
+        resolve(tx)
+      }).catch(err => {
+        reject(err)
+      })
+    })
+  },
   getCardById: function(id){
     let self = this
     return new Promise((resolve, reject) => {
@@ -54,13 +64,12 @@ const CryptoCardFactory = {
       })
     })
   },
-  createCard: function(name, identity){
+  createCard: function(identity, price, name, onSale){
     let self = this
     console.log(window.web3.eth.accounts[0]);
     return new Promise((resolve, reject) => {
       self.instance.createCard(
-        name, 
-        identity,
+        identity, price, name, onSale,
         {from: window.web3.eth.accounts[0], gas: 300000}
       ).then(tx => {
         resolve(tx)

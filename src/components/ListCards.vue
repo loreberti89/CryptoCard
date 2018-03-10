@@ -7,12 +7,16 @@
       <tr>
         <th>Identità</th>
         <th>Nome</th>
+        <th>In vendita</th>
+        <th>Prezzo</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="card in cards">
-        <td>{{ card.identity }}</td>
+        <td>{{card.identity }}</td>
         <td>{{card.name}}</td>
+        <td>{{card.onSale}}</td>
+        <td>{{card.getPriceFromWei()}}</td>
       </tr>
     </tbody>
     </table>
@@ -38,11 +42,17 @@ export default {
   },
   beforeCreate: function () {
     CryptoCardsFactory.init().then(() => {
-      CryptoCardsFactory.getAllCards().then(tx => {
+      CryptoCardsFactory.getCardsOnSale().then(tx => {
               let cards = tx;
               for(var i = 0; i < cards.length; i++){
                 CryptoCardsFactory.getCardById(cards[i].toNumber()).then(txc => {
-                  this.$store.commit('pushCard', new Card(txc[0], txc[1].toNumber()));    
+                  this.$store.commit('pushCard', 
+                    new Card(
+                      //identity, price, name, onsale
+                      txc[0].toNumber(), txc[1].toNumber(), txc[2], txc[3]
+                      
+                    )
+                  );    
                 }).catch(err=>{
                   console.log(err);
                 })
