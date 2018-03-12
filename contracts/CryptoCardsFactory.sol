@@ -7,8 +7,8 @@ contract CryptoCardsFactory is Ownable {
   using SafeMath for uint256;
   //event NewCard(uint id,string _name, uint _identity);
   struct Card{
-  	uint256 identity;
-    uint256 price;
+  	uint256 price;
+    string identity;
   	string name;
     bool onSale;
     
@@ -53,14 +53,14 @@ contract CryptoCardsFactory is Ownable {
     return ids;
   }
 
-  function getCardById(uint id) external view returns(uint256,uint256, string, bool){
-    return (cards[id].identity, cards[id].price, cards[id].name, cards[id].onSale);
+  function getCardById(uint id) external view returns(uint256, string, string, bool){
+    return (cards[id].price, cards[id].identity, cards[id].name, cards[id].onSale);
   }
 
-  function createCard(uint256 _identity, uint256 _price, string _name,  bool _onSale) external onlyOwner {
+  function createCard(uint256 _price, string _identity, string _name,  bool _onSale) external onlyOwner {
 
 
-  	uint id = cards.push(Card(_identity, _price, _name, _onSale))- 1;
+  	uint id = cards.push(Card(_price,_identity, _name, _onSale))- 1;
 
     cardOwner[id] = msg.sender;
     ownedCards[msg.sender].push(id); 

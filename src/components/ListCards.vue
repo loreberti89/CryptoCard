@@ -48,8 +48,8 @@ export default {
                 CryptoCardsFactory.getCardById(cards[i].toNumber()).then(txc => {
                   this.$store.commit('pushCard', 
                     new Card(
-                      //identity, price, name, onsale
-                      txc[0].toNumber(), txc[1].toNumber(), txc[2], txc[3]
+                      //price, identity,  name, onsale
+                      txc[0].toNumber(), txc[1] , txc[2], txc[3]
                       
                     )
                   );    

@@ -8,6 +8,9 @@ import App from './App'
 import Web3 from 'web3'
 import router from './router'
 
+
+
+
 Vue.config.productionTip = false
 Vue.use(Vuex)
 window.addEventListener('load', function () {
@@ -19,6 +22,11 @@ window.addEventListener('load', function () {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
   }
+
+
+var ipfsAPI = require('ipfs-api')
+// or using options
+window.ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'})
 
 const store = new Vuex.Store({
   state: {

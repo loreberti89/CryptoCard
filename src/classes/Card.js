@@ -1,7 +1,7 @@
 class Card {
-	constructor(_identity, _price, _name, _onSale){
-		this.identity = _identity;
+	constructor(_price, _identity, _name, _onSale){
 		this.price = _price;
+		this.identity = _identity;
 		this.name = _name;
 		this.onSale = _onSale;	
 	}

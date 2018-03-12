@@ -9,6 +9,8 @@
         <label>A quale prezzo (deve essere maggiore di 0 e in eth)</label>
         <input name="price" type="number" v-model="card.price" step="0.01"/>
       </span>
+      <label>Immagine</label>
+      <input type="file" @change="filesChange($event.target.name, $event.target.files);" />
       <button>Crea</button>
     </form>
   
@@ -28,35 +30,67 @@ export default {
           identity: null,
           onSale: false,
           price: 0
-        }    
+        },
+        image: ""    
     }
   },
   computed: {
     
   },
   methods: {
+    filesChange(event, fileList){
+      let reader = new FileReader();
+      const file = fileList[0];
+      reader.readAsDataURL(file);
+        reader.onload = function(e) {
+          this.image = e.target.result;
+          console.log(this.image);
+          
+        } ;
+    },
+    saveToIpfs(reader){
+      console.log(reader);
+    },
     saveCard(){
-      var identity = moment().unix();
-      this.$set(this.card, 'identity', identity);
-      if(!this.card.onSale){
-        this.$set(this.card, 'price', 0);
-      }else{
-        this.$set(this.card, 'price', window.web3.toWei(this.card.price, 'ether'));
-      }
+      
+      let self = this;
+      window.ipfs.add(new Buffer(self.image), function(err, res) {
+          
+          if(res){
+
+            self.$set(self.card, 'identity', res[0].hash);
+      
+            if(!self.card.onSale){
+              self.$set(self.card, 'price', 0);
+            }else{
+              self.$set(self.card, 'price', window.web3.toWei(self.card.price, 'ether'));
+            }
       
 
-      CryptoCardsFactory.createCard(this.card.identity, this.card.price, this.card.name, this.card.onSale).then(tx => {
-          this.$store.commit('incrementsNumberCards');
-            
-          if(this.card.onSale){
-            this.$store.commit('pushCard', new Card(this.card.identity, this.card.price, this.card.name, this.card.onSale)); 
+            CryptoCardsFactory.createCard(self.card.price, self.card.identity, self.card.name, 
+            self.card.onSale).then(tx => {
+                self.$store.commit('incrementsNumberCards');
+                if(self.card.onSale){
+                  self.$store.commit('pushCard', new Card(self.card.price, self.card.identity,  self.card.name, self.card.onSale)); 
+                }
+                
+                  
+                }).catch(err => {
+                  console.log(err)
+            })
+
+          }else{
+            console.log("errore in ipfs");
           }
-          
             
-          }).catch(err => {
-            console.log(err)
-      })
-    }
+                
+      });
+
+
+      //var identity = moment().unix();
+          }
+      
+    
   }
 }
 </script>

@@ -64,7 +64,7 @@ const CryptoCardFactory = {
       })
     })
   },
-  createCard: function(identity, price, name, onSale){
+  createCard: function(price, identity,  name, onSale){
     let self = this
     console.log(window.web3.eth.accounts[0]);
     return new Promise((resolve, reject) => {
