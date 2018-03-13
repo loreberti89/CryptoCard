@@ -13,7 +13,9 @@
     </thead>
     <tbody>
       <tr v-for="card in cards">
-        <td>{{card.identity }}</td>
+        <td>
+          <img width="100" v-bind:src="`${card.imageBase64}`">
+        </td>
         <td>{{card.name}}</td>
         <td>{{card.onSale}}</td>
         <td>{{card.getPriceFromWei()}}</td>
@@ -41,18 +43,26 @@ export default {
         
   },
   beforeCreate: function () {
+    let self = this;
     CryptoCardsFactory.init().then(() => {
       CryptoCardsFactory.getCardsOnSale().then(tx => {
               let cards = tx;
               for(var i = 0; i < cards.length; i++){
                 CryptoCardsFactory.getCardById(cards[i].toNumber()).then(txc => {
-                  this.$store.commit('pushCard', 
+
+                  window.ipfs.files.cat(txc[1],  function (err, stream){
+                      
+                  
+                  self.$store.commit('pushCard', 
                     new Card(
                       //price, identity,  name, onsale
-                      txc[0].toNumber(), txc[1] , txc[2], txc[3]
+                      txc[0].toNumber(), txc[1] , txc[2], txc[3], Buffer(stream, 'ascii').toString()
                       
                     )
-                  );    
+                  );
+                  }); 
+
+                     
                 }).catch(err=>{
                   console.log(err);
                 })

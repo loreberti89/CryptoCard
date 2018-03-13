@@ -41,23 +41,22 @@ export default {
     filesChange(event, fileList){
       let reader = new FileReader();
       const file = fileList[0];
+      let self = this;
       reader.readAsDataURL(file);
         reader.onload = function(e) {
-          this.image = e.target.result;
-          console.log(this.image);
+          self.image = e.target.result;
+
+          
           
         } ;
     },
-    saveToIpfs(reader){
-      console.log(reader);
-    },
     saveCard(){
       
+
       let self = this;
       window.ipfs.add(new Buffer(self.image), function(err, res) {
           
           if(res){
-
             self.$set(self.card, 'identity', res[0].hash);
       
             if(!self.card.onSale){
@@ -71,7 +70,11 @@ export default {
             self.card.onSale).then(tx => {
                 self.$store.commit('incrementsNumberCards');
                 if(self.card.onSale){
-                  self.$store.commit('pushCard', new Card(self.card.price, self.card.identity,  self.card.name, self.card.onSale)); 
+                  window.ipfs.files.cat(self.card.identity,  function (err, stream){
+                    self.$store.commit('pushCard', new Card(self.card.price, self.card.identity,  self.card.name, self.card.onSale, Buffer(stream, 'ascii').toString()));
+
+                  });
+                   
                 }
                 
                   

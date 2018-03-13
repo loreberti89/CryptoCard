@@ -1,9 +1,10 @@
 class Card {
-	constructor(_price, _identity, _name, _onSale){
+	constructor(_price, _identity, _name, _onSale, _imageBase64){
 		this.price = _price;
 		this.identity = _identity;
 		this.name = _name;
-		this.onSale = _onSale;	
+		this.onSale = _onSale;
+		this.imageBase64 = _imageBase64;	
 	}
 	 
 

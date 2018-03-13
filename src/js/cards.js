@@ -66,10 +66,10 @@ const CryptoCardFactory = {
   },
   createCard: function(price, identity,  name, onSale){
     let self = this
-    console.log(window.web3.eth.accounts[0]);
+   
     return new Promise((resolve, reject) => {
       self.instance.createCard(
-        identity, price, name, onSale,
+        price, identity, name, onSale,
         {from: window.web3.eth.accounts[0], gas: 300000}
       ).then(tx => {
         resolve(tx)
