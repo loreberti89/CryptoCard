@@ -2,12 +2,12 @@
   <div class="form">
     <form v-on:submit.prevent="saveCard()">
       <label>Nome carta</label>
-      <input type="text" name="name" v-model="card.name"/>
+      <input class="form-control" type="text" name="name" v-model="card.name"/>
       <label>La carta sarà in vendita? </label>
       <input type="checkbox" name="onSale" v-model="card.onSale" />
       <span v-if="card.onSale">
         <label>A quale prezzo (deve essere maggiore di 0 e in eth)</label>
-        <input name="price" type="number" v-model="card.price" step="0.01"/>
+        <input class="form-control" name="price" type="number" v-model="card.price" step="0.01"/>
       </span>
       <label>Immagine</label>
       <input type="file" @change="filesChange($event.target.name, $event.target.files);" />
@@ -71,6 +71,7 @@ export default {
                 self.$store.commit('incrementsNumberCards');
                 if(self.card.onSale){
                   window.ipfs.files.cat(self.card.identity,  function (err, stream){
+                    
                     self.$store.commit('pushCard', new Card(self.card.price, self.card.identity,  self.card.name, self.card.onSale, Buffer(stream, 'ascii').toString()));
 
                   });
