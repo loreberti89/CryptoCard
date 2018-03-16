@@ -41,8 +41,20 @@ contract CryptoCardsFactory is Ownable {
     return ids;
   }
 
+  function countCardsOnSale() private view returns(uint){
+    uint counter = 0;
+    for(uint i = 0; i < cards.length; i++){
+      if(cards[i].onSale){
+        counter++;
+      }
+    }
+    return counter;
+  }
+
   function getCardsOnSale() external view returns(uint[]) {
-    uint[] memory ids = new uint[](cards.length);
+
+
+    uint[] memory ids = new uint[](countCardsOnSale());
     uint counter = 0;
     for(uint i = 0; i < cards.length; i++){
       if(cards[i].onSale){
@@ -52,6 +64,8 @@ contract CryptoCardsFactory is Ownable {
     }
     return ids;
   }
+
+
 
   function getCardById(uint id) external view returns(uint256, string, string, bool){
     return (cards[id].price, cards[id].identity, cards[id].name, cards[id].onSale);

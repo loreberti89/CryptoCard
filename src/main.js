@@ -32,7 +32,8 @@ window.ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'})
 const store = new Vuex.Store({
   state: {
     numberCards: 0,
-    cards: []
+    cards: [],
+    cardDetail: {}
   },
   mutations: {
     incrementsNumberCards (state) {
@@ -44,6 +45,9 @@ const store = new Vuex.Store({
     pushCard(state, card){
       
       state.cards.push(card);
+    },
+    setCardDetail(state, card){
+      state.cardDetail = card;
     }
   },
   getters:{
@@ -52,6 +56,9 @@ const store = new Vuex.Store({
     },
     getCards: state => {
       return state.cards;
+    },
+    getCardDetail: state =>{
+      return state.cardDetail;
     }
   }
 })

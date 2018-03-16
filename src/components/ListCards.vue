@@ -1,24 +1,26 @@
 <template>
   <div class="list">
-    <h1>Lista Carte</h1>
+    <h1>Lista Carte in vendita</h1>
     
     <table>
     <thead>
       <tr>
+        <th>#</th>
         <th>Identità</th>
         <th>Nome</th>
-        <th>In vendita</th>
-        <th>Prezzo</th>
+        <th>Prezzo richiesto</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="card in cards">
+        <td>id</td>
         <td>
           <img width="100" v-bind:src="`${card.imageBase64}`">
         </td>
         <td>{{card.name}}</td>
-        <td>{{card.onSale}}</td>
+        
         <td>{{card.getPriceFromWei()}}</td>
+        
       </tr>
     </tbody>
     </table>
@@ -47,6 +49,7 @@ export default {
     CryptoCardsFactory.init().then(() => {
       CryptoCardsFactory.getCardsOnSale().then(tx => {
               let cards = tx;
+              console.log(tx.length);
               for(var i = 0; i < cards.length; i++){
                 CryptoCardsFactory.getCardById(cards[i].toNumber()).then(txc => {
 
